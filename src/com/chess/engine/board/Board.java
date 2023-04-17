@@ -2,7 +2,6 @@ package com.chess.engine.board;
 
 import com.chess.engine.pieces.*;
 import com.chess.engine.player.BlackPlayer;
-import com.chess.engine.player.MoveTransition;
 import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
 import com.google.common.collect.ImmutableList;
@@ -37,8 +36,8 @@ public final class Board {
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard, Alliance.BLACK);
 
-        final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
-        final Collection<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
+        final Collection<Move> whiteStandardLegalMoves = calculatePossibleMoves(this.whitePieces);
+        final Collection<Move> blackStandardLegalMoves = calculatePossibleMoves(this.blackPieces);
 
         this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
         this.blackPlayer = new BlackPlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
@@ -128,7 +127,7 @@ public final class Board {
      * @param pieces All The Active Pieces On The Current Board
      * @return A Copy Of The List legalMoves
      */
-    private Collection<Move> calculateLegalMoves(Collection<Piece> pieces){
+    private Collection<Move> calculatePossibleMoves(Collection<Piece> pieces){
 
         final List<Move> legalMoves = new ArrayList<>();
 

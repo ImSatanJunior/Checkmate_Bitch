@@ -5,7 +5,6 @@ import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.player.MoveTransition;
 import com.chess.engine.player.Player;
-import com.google.common.collect.Iterables;
 
 import java.util.*;
 
@@ -106,14 +105,24 @@ public class Application {
 
             if(board.currentPlayer().equals(userPlayer)){
                 //Allow The User To Select And Make A Move
-
                 Move move = selectMove(board);
                 MoveTransition moveTransition = board.currentPlayer().makeMove(move);
 
                 board = moveTransition.getTransitionBoard();
+                userPlayer = board.currentPlayer().getOpponent();
+                enginePlayer = board.currentPlayer();
 
             } else if (board.currentPlayer().equals(enginePlayer)){
                 //Allow The Engine To Select And Make A Move
+
+                //Gets A Random Move From The Collection
+                Move move = getRandomMove(board.currentPlayer().getLegalMoves());
+
+                MoveTransition moveTransition = board.currentPlayer().makeMove(move);
+
+                board = moveTransition.getTransitionBoard();
+                userPlayer = board.currentPlayer();
+                enginePlayer = board.currentPlayer().getOpponent();
             } else {
                 //User Is Playing Against Themselves
                 //Allow The User To Select And Make A Move
@@ -122,9 +131,16 @@ public class Application {
 
                 board = moveTransition.getTransitionBoard();
             }
-        } while (!board.currentPlayer().isInCheckMate() || !board.currentPlayer().isInStalemate() || !board.currentPlayer().getOpponent().isInCheckMate());
 
-        System.out.println("The Game Has Finished");
+        } while (!board.currentPlayer().isInCheckMate() && !board.currentPlayer().isInStalemate());
+
+        if(board.currentPlayer().isInCheckMate()){
+            System.out.println(board.currentPlayer().getOpponent().toString() + " Wins By Checkmate!");
+        } else {
+            System.out.println("The Game Has Ended In A Draw");
+        }
+
+        System.out.println(board);
 
     }
 
@@ -149,12 +165,20 @@ public class Application {
         return move;
     }
 
+    private Move getRandomMove(Collection<Move> from) {
+        Random rnd = new Random();
+        int i = rnd.nextInt(from.size());
+        return (Move) from.toArray()[i];
+    }
+
 
     public static void main(String[] args){
 
         Application app = new Application();
 
         app.runApp();
+        
+
 
     }
 }

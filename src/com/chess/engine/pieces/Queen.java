@@ -98,6 +98,7 @@ public class Queen extends Piece{
             }
 
         }
+
         return ImmutableList.copyOf(possibleMoves);
     }
 
