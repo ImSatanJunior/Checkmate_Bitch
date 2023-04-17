@@ -120,7 +120,7 @@ public abstract class Player {
      * @return If The Player Is Not In Check And Cannot Move
      */
     public boolean isInStalemate(){
-        return this.isInCheck && !hasEscapeMoves();
+        return !this.isInCheck && !hasEscapeMoves();
     }
 
     /**
