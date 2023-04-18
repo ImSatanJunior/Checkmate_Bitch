@@ -73,10 +73,10 @@ public class Pawn extends Piece{
                 } else {
                     possibleMoves.add(new Move.PawnMove(board, this, candidateDestinationCoordinate));
                 }
-            } else if(currentCandidateOffset == 16 && this.isFirstMove() && !candidateDestinationTile.isTileOccupied()){
-                if(!board.getTile(this.piecePosition + (currentCandidateOffset * this.pieceAlliance.getDirection())).isTileOccupied()){
-                    possibleMoves.add(new Move.PawnJump(board, this, candidateDestinationCoordinate));
-                }
+            } else if(currentCandidateOffset == 16 && this.isFirstMove() && !candidateDestinationTile.isTileOccupied() &&
+                    !board.getTile(this.piecePosition + (8 * this.pieceAlliance.getDirection())).isTileOccupied()){
+                possibleMoves.add(new Move.PawnJump(board, this, candidateDestinationCoordinate));
+
             } else if(currentCandidateOffset == 7 &&
                     !(isFirstColumnExclusion(this.piecePosition, currentCandidateOffset) ||
                     isEightColumnExclusion(this.piecePosition, currentCandidateOffset))){
