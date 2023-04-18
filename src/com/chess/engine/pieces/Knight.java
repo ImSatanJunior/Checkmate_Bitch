@@ -130,7 +130,7 @@ public class Knight extends Piece{
      * @return If The Possible Move Is Illegal
      */
     public static boolean isSecondColumnExclusion(final int currentPosition, final int candidatePosition){
-        return BoardUtils.SECOND_COLUMN[currentPosition] && ((candidatePosition == -17) || (candidatePosition == 6));
+        return BoardUtils.SECOND_COLUMN[currentPosition] && ((candidatePosition == -10) || (candidatePosition == 6));
     }
 
     /**
