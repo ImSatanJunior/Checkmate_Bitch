@@ -476,6 +476,7 @@ public abstract class Move {
 
             movedPiece.pieceHasMoved();
             final Pawn movedPawn = (Pawn)this.movedPiece.movePiece(this);
+            movedPawn.pieceHasMoved();
             builder.setPiece(movedPawn);
             builder.setEnPassant(movedPawn);
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
