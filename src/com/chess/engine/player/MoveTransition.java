@@ -8,18 +8,21 @@ import com.chess.engine.board.Move;
  */
 public class MoveTransition {
 
-    private final Board transitionBoard;
+    private final Board fromBoard;
+    private final Board toBoard;
     private final Move move;
     private final MoveStatus moveStatus;
 
     /**
      * Constructor For Move Transition
-     * @param board The Board To Transition On
+     * @param fromBoard The Board Before Executing The Move
+     * @param toBoard The Board After Executing The Move
      * @param move The Move We Are Transitioning
      * @param moveStatus The Moves Status
      */
-    public MoveTransition(final Board board, final Move move, final MoveStatus moveStatus){
-        this.transitionBoard = board;
+    public MoveTransition(final Board fromBoard, final Board toBoard, final Move move, final MoveStatus moveStatus){
+        this.fromBoard = fromBoard;
+        this.toBoard = toBoard;
         this.move = move;
         this.moveStatus = moveStatus;
     }
@@ -32,11 +35,14 @@ public class MoveTransition {
         return this.moveStatus;
     }
 
-    /**
-     * Get The Transition Board
-     * @return The Transition Board
-     */
-    public Board getTransitionBoard() {
-        return this.transitionBoard;
+
+    public Board getFromBoard() {
+        return this.fromBoard;
     }
+
+    public Board getToBoard(){
+        return this.toBoard;
+    }
+
+
 }

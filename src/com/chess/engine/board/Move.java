@@ -11,9 +11,9 @@ import com.chess.engine.pieces.Rook;
 public abstract class Move {
 
     protected final Board board;
-    protected final Piece movedPiece;
+    protected Piece movedPiece;
     protected final int destinationCoordinate;
-    protected final boolean isFirstMove;
+    protected boolean isFirstMove;
 
     final static Move NULL_MOVE = new NullMove();
 
@@ -158,11 +158,22 @@ public abstract class Move {
         for(final  Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()){
             builder.setPiece(piece);
         }
+
+
         //Move The Moved Piece
         this.movedPiece.pieceHasMoved();
         builder.setPiece(this.movedPiece.movePiece(this));
         //Set The Next Person To Make A Move
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
+        return builder.build();
+    }
+
+    public Board undo() {
+        final Board.Builder builder = new Board.Builder();
+        for(final Piece piece : this.board.getAllPieces()){
+            builder.setPiece(piece);
+        }
+        builder.setMoveMaker(this.board.currentPlayer().getAlliance());
         return builder.build();
     }
 

@@ -166,7 +166,7 @@ public abstract class Player {
 
         //If The Move Is Not Legal Return A New Move Transition With Status Illegal Move
         if(!isMoveLegal(move)){
-                return new MoveTransition(this.board, move ,MoveStatus.ILLEGAL_MOVE);
+                return new MoveTransition(this.board, this.board , move ,MoveStatus.ILLEGAL_MOVE);
         }
 
         //Execute The Move
@@ -178,11 +178,15 @@ public abstract class Player {
 
         //If kingAttacks Is Not Empty Return A New Move Transition With Status Leaves Player In Check
         if(!kingAttacks.isEmpty()){
-            return new MoveTransition(this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK);
+            return new MoveTransition(this.board, this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK);
         }
 
         //Return A New Move Transition With Status Done
-        return new MoveTransition(transitionBoard, move, MoveStatus.DONE);
+        return new MoveTransition(this.board, transitionBoard, move, MoveStatus.DONE);
+    }
+
+    public MoveTransition unMakeMove(final Move move){
+        return new MoveTransition(this.board, move.undo(), move, MoveStatus.DONE);
     }
 
     /**

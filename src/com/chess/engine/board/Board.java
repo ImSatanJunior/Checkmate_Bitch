@@ -242,6 +242,13 @@ public final class Board {
         return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
     }
 
+    public Collection<Piece> getAllPieces() {
+        List<Piece> pieces = new ArrayList<>();
+        pieces.addAll(whitePieces);
+        pieces.addAll(blackPieces);
+        return ImmutableList.copyOf(pieces);
+    }
+
     /**
      * A Nested Class Within Board
      */
