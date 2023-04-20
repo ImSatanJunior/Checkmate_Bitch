@@ -11,16 +11,147 @@ import java.util.*;
 public class Application {
 
     private static Scanner input;
+
     private Player userPlayer;
     private Player enginePlayer;
+    private Player otherEnginePlayer;
 
-    public Application(){
+    public Application() {
         input = new Scanner(System.in);
     }
 
     private void runApp(){
         runMenu();
     }
+
+    private void runEngine(){
+        setUCI();
+    }
+
+    private void testNumMoves() {
+        Board board = Board.createStandardBoard();
+
+        //1 Depth
+        long startTime = System.currentTimeMillis();
+        System.out.print("Number Of Valid Moves At Depth 1: " + moveGenerationTest(1));
+        long totalTime = System.currentTimeMillis() - startTime;
+        System.out.println(" And Took "+ totalTime + "ms");
+
+        //2 Depth
+        startTime = System.currentTimeMillis();
+        System.out.print("Number Of Valid Moves At Depth 2: " + moveGenerationTest(2));
+        totalTime = System.currentTimeMillis() - startTime;
+        System.out.println(" And Took "+ totalTime + "ms");
+
+        //3 Depth
+        startTime = System.currentTimeMillis();
+        System.out.print("Number Of Valid Moves At Depth 3: " + moveGenerationTest(3));
+        totalTime = System.currentTimeMillis() - startTime;
+        System.out.println(" And Took "+ totalTime + "ms");
+
+        //4 Depth
+        startTime = System.currentTimeMillis();
+        System.out.print("Number Of Valid Moves At Depth 4: " + moveGenerationTest(4));
+        totalTime = System.currentTimeMillis() - startTime;
+        System.out.println(" And Took "+ totalTime + "ms");
+
+        //5 Depth
+        startTime = System.currentTimeMillis();
+        System.out.print("Number Of Valid Moves At Depth 5: " + moveGenerationTest(5));
+        totalTime = System.currentTimeMillis() - startTime;
+        System.out.println(" And Took "+ totalTime + "ms");
+
+        //6 Depth
+        startTime = System.currentTimeMillis();
+        System.out.print("Number Of Valid Moves At Depth 6: " + moveGenerationTest(6));
+        totalTime = System.currentTimeMillis() - startTime;
+        System.out.println(" And Took "+ totalTime + "ms");
+    }
+
+    Board board = Board.createStandardBoard();
+
+    private int moveGenerationTest(int depth) {
+        if(depth == 0){
+            return 1;
+        }
+
+        int numPositions = 0;
+
+        for(final Move move : board.currentPlayer().getPossibleMoves()){
+            final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
+
+
+            if(moveTransition.getMoveStatus().isDone()){
+                board = moveTransition.getToBoard();
+                numPositions += moveGenerationTest(depth - 1);
+            }
+
+
+            board = moveTransition.getFromBoard();
+        }
+        return numPositions;
+    }
+
+    /**
+     * Waits For Input To Set The Engine Up In UCI Mode
+     */
+    private void setUCI() {
+        //Wait For The GUI To Initialise The Engine
+        String uciInitialisation = input.nextLine().toLowerCase();
+        if (uciInitialisation.startsWith("uci")) {
+            runUCIEngine();
+        }
+    }
+
+    private void runUCIEngine(){
+        //Set The Engines Name And Author And Tell The GUI Everything Is Ready
+        System.out.println("id name Checkmate Bitch -- This Is The Name");
+        System.out.println("id author Astra H");
+        System.out.println("uciok");
+        String readyCommand = input.nextLine().toLowerCase();
+        if(readyCommand.startsWith("isready")){
+            //Wait For All The Setup To Finish
+            System.out.println("readyok");
+        }
+
+        Board board = null;
+
+        while(true){
+
+            //Get The Input From The GUI
+            String guiInput = input.nextLine().toLowerCase();
+
+
+            if(guiInput.equals("ucinewgame")){
+                 board = Board.createStandardBoard();
+            } else if(guiInput.startsWith("position startpos moves")){
+                //Decode The Last Given Move And Make That Move On The Engine Side Board
+                int finalLetter = guiInput.length();
+                String lastMove = guiInput.substring(finalLetter - 4, finalLetter);
+                System.out.println(lastMove);
+
+                int moveInitial = BoardUtils.getCoordinateAtPosition(lastMove.substring(0, 2));
+                int moveDestination = BoardUtils.getCoordinateAtPosition(lastMove.substring(2, 4));
+
+                final Move move = Move.MoveFactory.createMove(board, moveInitial, moveDestination);
+                final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
+                board = moveTransition.getToBoard();
+            } else if(guiInput.startsWith("go")){
+                Move bestMove = getRandomMove(board.currentPlayer().getPossibleMoves());
+
+                String outputMove = BoardUtils.getPositionAtCoordinate(bestMove.getCurrentCoordinate()) +
+                        BoardUtils.getPositionAtCoordinate(bestMove.getDestinationCoordinate());
+                //Tells The GUI The Move We Want To Make
+                System.out.println("bestmove " + outputMove);
+
+                //Make The Move On The Internal Board
+                final MoveTransition moveTransition = board.currentPlayer().makeMove(bestMove);
+                board = moveTransition.getToBoard();
+            }
+
+
+            }
+        }
 
     /**
      * Runs The Menu
@@ -74,6 +205,13 @@ public class Application {
                     playGame(board);
 
                     break;
+                case "5":
+                    //Sets Two Engine Sides
+                    otherEnginePlayer = board.blackPlayer();
+                    enginePlayer = board.whitePlayer();
+
+                    playGame(board);
+                    break;
                 case "Q":
                     System.out.println("Thanks For Using The Program, Goodbye");
                     break;
@@ -92,6 +230,7 @@ public class Application {
         System.out.println("2 - Play As A White Vs Engine");
         System.out.println("3 - Play As Black Vs Engine");
         System.out.println("4 - Play As Both Sides");
+        System.out.println("5 - Play An Engine Vs Engine Game");
         System.out.println("Q - Quit The Program");
     }
 
@@ -101,6 +240,7 @@ public class Application {
             //Print Out The Board And The Current Player, Before Every Move
             System.out.println("The Current Player Is " + board.currentPlayer().toString());
             System.out.println(board);
+            System.out.println(board.currentPlayer().getPossibleMoves());
 
 
             if(board.currentPlayer().equals(userPlayer)){
@@ -108,7 +248,7 @@ public class Application {
                 Move move = selectMove(board);
                 MoveTransition moveTransition = board.currentPlayer().makeMove(move);
 
-                board = moveTransition.getTransitionBoard();
+                board = moveTransition.getToBoard();
                 userPlayer = board.currentPlayer().getOpponent();
                 enginePlayer = board.currentPlayer();
 
@@ -116,20 +256,35 @@ public class Application {
                 //Allow The Engine To Select And Make A Move
 
                 //Gets A Random Move From The Collection
-                Move move = getRandomMove(board.currentPlayer().getLegalMoves());
+                Move move = getRandomMove(board.currentPlayer().getPossibleMoves());
 
                 MoveTransition moveTransition = board.currentPlayer().makeMove(move);
 
-                board = moveTransition.getTransitionBoard();
-                userPlayer = board.currentPlayer();
+                board = moveTransition.getToBoard();
+                if(otherEnginePlayer != null){
+                    otherEnginePlayer = board.currentPlayer();
+                } else {
+                    userPlayer = board.currentPlayer();
+                }
                 enginePlayer = board.currentPlayer().getOpponent();
+            }  else if (board.currentPlayer().equals(otherEnginePlayer)){
+                //Allow The Engine To Select And Make A Move
+
+                //Gets A Random Move From The Collection
+                Move move = getRandomMove(board.currentPlayer().getPossibleMoves());
+
+                MoveTransition moveTransition = board.currentPlayer().makeMove(move);
+
+                board = moveTransition.getToBoard();
+                enginePlayer = board.currentPlayer();
+                otherEnginePlayer = board.currentPlayer().getOpponent();
             } else {
                 //User Is Playing Against Themselves
                 //Allow The User To Select And Make A Move
                 Move move = selectMove(board);
                 MoveTransition moveTransition = board.currentPlayer().makeMove(move);
 
-                board = moveTransition.getTransitionBoard();
+                board = moveTransition.getToBoard();
             }
 
         } while (!board.currentPlayer().isInCheckMate() && !board.currentPlayer().isInStalemate());
@@ -155,7 +310,7 @@ public class Application {
         final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
 
         //If The Move Is Done And A Valid Move
-        if(moveTransition.getMoveStatus().isDone() && board.currentPlayer().getLegalMoves().contains(move)){
+        if(moveTransition.getMoveStatus().isDone() && board.currentPlayer().getPossibleMoves().contains(move)){
             return move;
         } else {
             //The Move Is Not Valid
@@ -172,13 +327,11 @@ public class Application {
     }
 
 
-    public static void main(String[] args){
-
+    public static void main(String[] args) {
         Application app = new Application();
 
-        app.runApp();
-        
-
-
+        //app.runApp();
+        app.runEngine();
+        //app.testNumMoves();
     }
 }

@@ -95,7 +95,7 @@ public abstract class  Piece {
      * Sets Whether the Piece Has Moves
      */
     public void pieceHasMoved(){
-        isFirstMove = false;
+        this.isFirstMove = false;
     }
 
     /**

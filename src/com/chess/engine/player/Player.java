@@ -19,7 +19,7 @@ public abstract class Player {
 
     protected final Board board;
     protected final King playerKing;
-    protected final Collection<Move> legalMoves;
+    protected final Collection<Move> possibleMoves;
     private final boolean isInCheck;
 
     /**
@@ -31,7 +31,7 @@ public abstract class Player {
     public Player(final Board board, final Collection<Move> legalMoves, final Collection<Move> opponentMoves){
         this.board = board;
         this.playerKing = establishKing();
-        this.legalMoves = ImmutableList.copyOf(Iterables.concat(legalMoves, calculateKingCastles(legalMoves, opponentMoves)));
+        this.possibleMoves = ImmutableList.copyOf(Iterables.concat(legalMoves, calculateKingCastles(legalMoves, opponentMoves)));
         this.isInCheck = !Player.calculateAttacksOnTile(this.playerKing.getPiecePosition(), opponentMoves).isEmpty();
     }
 
@@ -47,8 +47,8 @@ public abstract class Player {
      * Gets All The Legal Moves For The Player
      * @return The List Of Legal Moves For The Player
      */
-    public Collection<Move> getLegalMoves(){
-        return this.legalMoves;
+    public Collection<Move> getPossibleMoves(){
+        return this.possibleMoves;
     }
 
     /**
@@ -95,8 +95,8 @@ public abstract class Player {
      * @param move The Move To Check
      * @return If The Move Is Contained With legalMoves
      */
-    public boolean isMoveLegal(final Move move){
-        return this.legalMoves.contains(move);
+    public boolean isMovePossible(final Move move){
+        return this.possibleMoves.contains(move);
     }
 
     /**
@@ -132,7 +132,7 @@ public abstract class Player {
      * @return If The Player Has Any Possible Moves
      */
     protected boolean hasEscapeMoves(){
-        for(final Move move : this.legalMoves){
+        for(final Move move : this.possibleMoves){
             final MoveTransition transition = makeMove(move);
             if(transition.getMoveStatus().isDone()){
                 return true;
@@ -165,7 +165,7 @@ public abstract class Player {
     public MoveTransition makeMove(final Move move){
 
         //If The Move Is Not Legal Return A New Move Transition With Status Illegal Move
-        if(!isMoveLegal(move)){
+        if(!isMovePossible(move)){
                 return new MoveTransition(this.board, this.board , move ,MoveStatus.ILLEGAL_MOVE);
         }
 
@@ -174,7 +174,7 @@ public abstract class Player {
 
         //Calculate Any New kingAttacks
         final Collection<Move> kingAttacks = Player.calculateAttacksOnTile(transitionBoard.currentPlayer().getOpponent().getPlayerKing().getPiecePosition(),
-                transitionBoard.currentPlayer().getLegalMoves());
+                transitionBoard.currentPlayer().getPossibleMoves());
 
         //If kingAttacks Is Not Empty Return A New Move Transition With Status Leaves Player In Check
         if(!kingAttacks.isEmpty()){

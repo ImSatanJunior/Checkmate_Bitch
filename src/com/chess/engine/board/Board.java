@@ -2,6 +2,7 @@ package com.chess.engine.board;
 
 import com.chess.engine.pieces.*;
 import com.chess.engine.player.BlackPlayer;
+import com.chess.engine.player.MoveTransition;
 import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
 import com.google.common.collect.ImmutableList;
@@ -36,12 +37,12 @@ public final class Board {
         this.whitePieces = calculateActivePieces(this.gameBoard, Alliance.WHITE);
         this.blackPieces = calculateActivePieces(this.gameBoard, Alliance.BLACK);
 
-        final Collection<Move> whiteStandardLegalMoves = calculatePossibleMoves(this.whitePieces);
-        final Collection<Move> blackStandardLegalMoves = calculatePossibleMoves(this.blackPieces);
+        Collection<Move> whiteStandardLegalMoves = calculatePossibleMoves(this.whitePieces);
+        Collection<Move> blackStandardLegalMoves = calculatePossibleMoves(this.blackPieces);
 
         this.whitePlayer = new WhitePlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
         this.blackPlayer = new BlackPlayer(this, whiteStandardLegalMoves, blackStandardLegalMoves);
-        this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
+        this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);;
 
         this.enPassantPawn = builder.enPassantPawn;
 
@@ -239,7 +240,7 @@ public final class Board {
      * @return An Iterable Of All The Legal Moves On The Board
      */
     public Iterable<Move> getAllLegalMoves() {
-        return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
+        return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getPossibleMoves(), this.blackPlayer.getPossibleMoves()));
     }
 
     public Collection<Piece> getAllPieces() {

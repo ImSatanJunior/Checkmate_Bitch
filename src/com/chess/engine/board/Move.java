@@ -161,7 +161,6 @@ public abstract class Move {
 
 
         //Move The Moved Piece
-        this.movedPiece.pieceHasMoved();
         builder.setPiece(this.movedPiece.movePiece(this));
         //Set The Next Person To Make A Move
         builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
@@ -173,6 +172,7 @@ public abstract class Move {
         for(final Piece piece : this.board.getAllPieces()){
             builder.setPiece(piece);
         }
+
         builder.setMoveMaker(this.board.currentPlayer().getAlliance());
         return builder.build();
     }
@@ -374,7 +374,7 @@ public abstract class Move {
                 }
             }
 
-            this.movedPiece.pieceHasMoved();
+
             builder.setPiece(this.movedPiece.movePiece(this));
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
             return builder.build();
@@ -427,7 +427,6 @@ public abstract class Move {
                 builder.setPiece(piece);
             }
 
-            this.promotedPawn.pieceHasMoved();
             this.promotedPawn.getPromotionPiece().pieceHasMoved();
             builder.setPiece(this.promotedPawn.getPromotionPiece().movePiece(this));
             builder.setMoveMaker(pawnMovedBoard.currentPlayer().getOpponent().getAlliance());
@@ -485,13 +484,21 @@ public abstract class Move {
                 builder.setPiece(piece);
             }
 
-            movedPiece.pieceHasMoved();
             final Pawn movedPawn = (Pawn)this.movedPiece.movePiece(this);
             movedPawn.pieceHasMoved();
             builder.setPiece(movedPawn);
             builder.setEnPassant(movedPawn);
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getAlliance());
             return builder.build();
+        }
+
+        /**
+         * Returns The Move As A String
+         * @return The String For The Move
+         */
+        @Override
+        public String toString(){
+            return BoardUtils.getPositionAtCoordinate(this.destinationCoordinate);
         }
     }
 
@@ -549,7 +556,6 @@ public abstract class Move {
                 builder.setPiece(piece);
             }
 
-            this.movedPiece.pieceHasMoved();
             builder.setPiece(this.movedPiece.movePiece(this));
             this.castleRook.pieceHasMoved();
             builder.setPiece(new Rook(this.castleRookDestination, this.castleRook.getPieceAlliance()));

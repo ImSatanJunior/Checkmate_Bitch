@@ -74,20 +74,19 @@ public class Pawn extends Piece{
                     possibleMoves.add(new Move.PawnMove(board, this, candidateDestinationCoordinate));
                 }
             } else if(currentCandidateOffset == 16 && this.isFirstMove() && !candidateDestinationTile.isTileOccupied()){
-                if(!board.getTile(this.piecePosition + (currentCandidateOffset * this.pieceAlliance.getDirection())).isTileOccupied()){
+                if(!board.getTile(this.piecePosition + (8 * this.pieceAlliance.getDirection())).isTileOccupied()){
                     possibleMoves.add(new Move.PawnJump(board, this, candidateDestinationCoordinate));
                 }
-            } else if(currentCandidateOffset == 7 &&
-                    !(isFirstColumnExclusion(this.piecePosition, currentCandidateOffset) ||
-                    isEightColumnExclusion(this.piecePosition, currentCandidateOffset))){
+            } else if((currentCandidateOffset == 7) &&
+                    !isFirstColumnExclusion(this.piecePosition, currentCandidateOffset) &&
+                    !isEightColumnExclusion(this.piecePosition, currentCandidateOffset)){
                 if(candidateDestinationTile.isTileOccupied()){
                     final Piece pieceOnCandidate = candidateDestinationTile.getPiece();
                     if(pieceOnCandidate.getPieceAlliance() != this.pieceAlliance){
                         if(this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)){
                             possibleMoves.add(new Move.PawnPromotionMove(new Move.PawnMove(board, this, candidateDestinationCoordinate)));
                         } else {
-                            possibleMoves.add(new Move.PawnAttackMove(board, this, candidateDestinationCoordinate,
-                                    candidateDestinationTile.getPiece()));
+                            possibleMoves.add(new Move.PawnAttackMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));
                         }
                     }
                 } else if(board.getEnPassantPawn() != null){
@@ -99,16 +98,15 @@ public class Pawn extends Piece{
                     }
                 }
             } else if((currentCandidateOffset == 9) &&
-                    !(isFirstColumnExclusion(this.piecePosition, currentCandidateOffset) ||
-                    isEightColumnExclusion(this.piecePosition, currentCandidateOffset))){
+                    !isFirstColumnExclusion(this.piecePosition, currentCandidateOffset) &&
+                    !isEightColumnExclusion(this.piecePosition, currentCandidateOffset)){
                 if(candidateDestinationTile.isTileOccupied()) {
                     final Piece pieceOnCandidate = candidateDestinationTile.getPiece();
                     if (pieceOnCandidate.getPieceAlliance() != this.pieceAlliance) {
                         if(this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)){
                             possibleMoves.add(new Move.PawnPromotionMove(new Move.PawnMove(board, this, candidateDestinationCoordinate)));
                         } else {
-                            possibleMoves.add(new Move.PawnAttackMove(board, this, candidateDestinationCoordinate,
-                                    candidateDestinationTile.getPiece()));
+                            possibleMoves.add(new Move.PawnAttackMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));
                         }
 
                     }
@@ -133,7 +131,7 @@ public class Pawn extends Piece{
      */
     @Override
     public Pawn movePiece(Move move) {
-        return new Pawn(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance(), true);
+        return new Pawn(move.getDestinationCoordinate(), move.getMovedPiece().getPieceAlliance(), false);
     }
 
     /**
@@ -156,8 +154,8 @@ public class Pawn extends Piece{
      * @return If The Possible Move Is Illegal
      */
     private boolean isFirstColumnExclusion(final int currentPosition, final int candidatePosition){
-        return BoardUtils.FIRST_COLUMN[currentPosition] && ((candidatePosition == 9 && this.pieceAlliance.equals(Alliance.BLACK)) ||
-                                                            (candidatePosition == 7 && this.pieceAlliance.equals(Alliance.WHITE)));
+        return BoardUtils.FIRST_COLUMN[currentPosition] && ((candidatePosition == 7 && this.pieceAlliance.equals(Alliance.BLACK)) ||
+                                                            (candidatePosition == 9 && this.pieceAlliance.equals(Alliance.WHITE)));
     }
 
     /**
@@ -167,7 +165,7 @@ public class Pawn extends Piece{
      * @return If The Possible Move Is Illegal
      */
     private boolean isEightColumnExclusion(final int currentPosition, final int candidatePosition){
-        return BoardUtils.FIRST_COLUMN[currentPosition] && ((candidatePosition == 9 && this.pieceAlliance.equals(Alliance.WHITE)) ||
-                                                            (candidatePosition == 7 && this.pieceAlliance.equals(Alliance.BLACK)));
+        return BoardUtils.EIGHTH_COLUMN[currentPosition] && ((candidatePosition == 7 && this.pieceAlliance.equals(Alliance.WHITE)) ||
+                                                            (candidatePosition == 9 && this.pieceAlliance.equals(Alliance.BLACK)));
     }
 }
