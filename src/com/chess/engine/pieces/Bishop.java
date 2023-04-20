@@ -68,8 +68,8 @@ public class Bishop extends Piece{
             while(BoardUtils.isValidTile(candidateDestinationCoordinate)){
 
                 //And Not A Column Exclusion
-                if(!isFirstColumnExclusion(candidateDestinationCoordinate, currentCandidateOffset) ||
-                        !isEightColumnExclusion(candidateDestinationCoordinate, currentCandidateOffset)){
+                if(isFirstColumnExclusion(candidateDestinationCoordinate, currentCandidateOffset) ||
+                        isEightColumnExclusion(candidateDestinationCoordinate, currentCandidateOffset)){
                     break;
                 }
 
@@ -101,7 +101,7 @@ public class Bishop extends Piece{
         return ImmutableList.copyOf(possibleMoves);
     }
 
-    /**
+    /**2125
      * Moves The Piece
      * @param move The Move To Do
      * @return A New Bishop With That Moves New Location
