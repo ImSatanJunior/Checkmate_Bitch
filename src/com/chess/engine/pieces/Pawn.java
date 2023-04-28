@@ -90,11 +90,9 @@ public class Pawn extends Piece{
                         }
                     }
                 } else if(board.getEnPassantPawn() != null){
-                    System.out.println("Here");
                     if(board.getEnPassantPawn().getPiecePosition() == (this.getPiecePosition() + (this.pieceAlliance.getOppositeDirection()))){
                         final Piece pieceOnCandidate = board.getEnPassantPawn();
                         if(this.pieceAlliance != pieceOnCandidate.getPieceAlliance()){
-                            System.out.println("Valid En Passant");
                             possibleMoves.add(new Move.PawnEnPassantMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));
                         }
                     }
@@ -113,11 +111,9 @@ public class Pawn extends Piece{
 
                     }
                 } else if(board.getEnPassantPawn() != null){
-                    System.out.println("Here");
                     if(board.getEnPassantPawn().getPiecePosition() == (this.getPiecePosition() + this.pieceAlliance.getOppositeDirection())){
                         final Piece pieceOnCandidate = board.getEnPassantPawn();
                         if(this.pieceAlliance != pieceOnCandidate.getPieceAlliance()){
-                            System.out.println("Valid En Passant");
                             possibleMoves.add(new Move.PawnEnPassantMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));
                         }
                     }
