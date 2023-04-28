@@ -2,7 +2,6 @@ package com.chess.engine.board;
 
 import com.chess.engine.pieces.*;
 import com.chess.engine.player.BlackPlayer;
-import com.chess.engine.player.MoveTransition;
 import com.chess.engine.player.Player;
 import com.chess.engine.player.WhitePlayer;
 import com.google.common.collect.ImmutableList;
@@ -234,6 +233,9 @@ public final class Board {
         return builder.build();
 
     }
+
+
+
 
     /**
      * Gets All The Legal Moves On The Board

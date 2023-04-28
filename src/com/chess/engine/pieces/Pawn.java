@@ -66,7 +66,7 @@ public class Pawn extends Piece{
             //Get The Tile
             final Tile candidateDestinationTile = board.getTile(candidateDestinationCoordinate);
 
-            //If Tile To In Front Is Not Occupied, Add New Legal Move
+
             if(currentCandidateOffset == 8 && !candidateDestinationTile.isTileOccupied()){
                 if(this.pieceAlliance.isPawnPromotionSquare(candidateDestinationCoordinate)){
                      possibleMoves.add(new Move.PawnPromotionMove(new Move.PawnMove(board, this, candidateDestinationCoordinate)));
@@ -90,9 +90,11 @@ public class Pawn extends Piece{
                         }
                     }
                 } else if(board.getEnPassantPawn() != null){
-                    if(board.getEnPassantPawn().getPiecePosition() == this.getPiecePosition() + (this.pieceAlliance.getDirection() * -1)){
+                    System.out.println("Here");
+                    if(board.getEnPassantPawn().getPiecePosition() == (this.getPiecePosition() + (this.pieceAlliance.getOppositeDirection()))){
                         final Piece pieceOnCandidate = board.getEnPassantPawn();
                         if(this.pieceAlliance != pieceOnCandidate.getPieceAlliance()){
+                            System.out.println("Valid En Passant");
                             possibleMoves.add(new Move.PawnEnPassantMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));
                         }
                     }
@@ -111,9 +113,11 @@ public class Pawn extends Piece{
 
                     }
                 } else if(board.getEnPassantPawn() != null){
-                    if(board.getEnPassantPawn().getPiecePosition() == this.getPiecePosition() + this.pieceAlliance.getDirection()){
+                    System.out.println("Here");
+                    if(board.getEnPassantPawn().getPiecePosition() == (this.getPiecePosition() + this.pieceAlliance.getOppositeDirection())){
                         final Piece pieceOnCandidate = board.getEnPassantPawn();
                         if(this.pieceAlliance != pieceOnCandidate.getPieceAlliance()){
+                            System.out.println("Valid En Passant");
                             possibleMoves.add(new Move.PawnEnPassantMove(board, this, candidateDestinationCoordinate, pieceOnCandidate));
                         }
                     }

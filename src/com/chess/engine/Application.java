@@ -31,6 +31,8 @@ public class Application {
     private void testNumMoves() {
         Board board = Board.createStandardBoard();
 
+
+
         //1 Depth
         long startTime = System.currentTimeMillis();
         System.out.print("Number Of Valid Moves At Depth 1: " + moveGenerationTest(1));
@@ -62,10 +64,10 @@ public class Application {
         System.out.println(" And Took "+ totalTime + "ms");
 
         //6 Depth
-        startTime = System.currentTimeMillis();
+        /* startTime = System.currentTimeMillis();
         System.out.print("Number Of Valid Moves At Depth 6: " + moveGenerationTest(6));
         totalTime = System.currentTimeMillis() - startTime;
-        System.out.println(" And Took "+ totalTime + "ms");
+        System.out.println(" And Took "+ totalTime + "ms"); */
     }
 
     Board board = Board.createStandardBoard();
@@ -78,8 +80,14 @@ public class Application {
         int numPositions = 0;
 
         for(final Move move : board.currentPlayer().getPossibleMoves()){
-            final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
 
+            if(board.currentPlayer().isInCheckMate()){
+                return 1;
+            }
+            final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
+            if(depth == 5){
+                System.out.println(move + "," + numPositions);
+            }
 
             if(moveTransition.getMoveStatus().isDone()){
                 board = moveTransition.getToBoard();
@@ -330,8 +338,8 @@ public class Application {
     public static void main(String[] args) {
         Application app = new Application();
 
-        //app.runApp();
-        app.runEngine();
-        //app.testNumMoves();
+        app.runApp();
+        //app.runEngine();
+        app.testNumMoves();
     }
 }

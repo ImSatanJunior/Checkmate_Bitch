@@ -19,6 +19,11 @@ public enum Alliance {
             return -1;
         }
 
+        @Override
+        public int getOppositeDirection() {
+            return 1;
+        }
+
         /**
          * Always Returns The Current Player Is The White Player For White
          * @param whitePlayer
@@ -45,6 +50,11 @@ public enum Alliance {
             return 1;
         }
 
+        @Override
+        public int getOppositeDirection() {
+            return -1;
+        }
+
         /**
          * Always Returns The Current Player Is The Black Player For White
          * @param whitePlayer
@@ -60,6 +70,7 @@ public enum Alliance {
         public boolean isPawnPromotionSquare(int position) {
             return BoardUtils.EIGHT_ROW[position];
         }
+
     };
 
     /**
@@ -75,4 +86,9 @@ public enum Alliance {
     public abstract Player choosePlayer(WhitePlayer whitePlayer, BlackPlayer blackPlayer);
 
     public abstract boolean isPawnPromotionSquare(int position);
+
+    /**
+     * Gets The Opposite Direction Of That Alliance
+     */
+    public abstract int getOppositeDirection();
 }
