@@ -33,6 +33,7 @@ public class Application {
 
 
 
+
         //1 Depth
         long startTime = System.currentTimeMillis();
         System.out.print("Number Of Valid Moves At Depth 1: " + moveGenerationTest(1));
@@ -82,7 +83,7 @@ public class Application {
         for(final Move move : board.currentPlayer().getPossibleMoves()){
 
             if(board.currentPlayer().isInCheckMate()){
-                return 1;
+                return 0;
             }
             final MoveTransition moveTransition = board.currentPlayer().makeMove(move);
             if(depth == 5){
@@ -338,7 +339,7 @@ public class Application {
     public static void main(String[] args) {
         Application app = new Application();
 
-        app.runApp();
+        //app.runApp();
         //app.runEngine();
         app.testNumMoves();
     }

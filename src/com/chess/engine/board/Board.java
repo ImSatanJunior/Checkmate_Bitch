@@ -231,11 +231,7 @@ public final class Board {
         builder.setMoveMaker(Alliance.WHITE);
 
         return builder.build();
-
     }
-
-
-
 
     /**
      * Gets All The Legal Moves On The Board

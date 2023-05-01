@@ -87,8 +87,7 @@ public class Bishop extends Piece{
                         possibleMoves.add(new Move.MajorMove(board, this, candidateDestinationCoordinate));
                     } else {
                         final Piece pieceAtDestination = candidateDestinationTile.getPiece();
-                        final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
-                        if(this.pieceAlliance != pieceAlliance){
+                        if(this.pieceAlliance != pieceAtDestination.pieceAlliance){
                             possibleMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                         }
                         break;
